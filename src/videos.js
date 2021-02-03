@@ -35,13 +35,14 @@ async function video(req, res, next) {
 
     const foundVideo = videos.find(a => a.id === Number(id));
 
+
     if (!foundVideo) {
         return next();
     }
 
     const { title } = foundVideo;
 
-    return res.render('video', { title, video: foundVideo });
+    return res.render('video', { title, video: { ...foundVideo, related: foundVideo.related.map(id => videos.find(v => v.id === id)) } });
 }
 
 router.get('/:id', catchErrors(video));
