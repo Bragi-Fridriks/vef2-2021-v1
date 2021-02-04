@@ -1,5 +1,5 @@
 const path = require('path');
-const express = require("express");
+const express = require('express');
 
 const videos = require('./src/videos');
 
@@ -10,12 +10,12 @@ app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-function notFoundHandler(req, res, next) {
+function notFoundHandler(req, res) {
   const title = 'Fannst ekki';
   const message = 'Ó nei, efnið finnst ekki';
   res.status(404).render('error', { title, message });
 }
-
+// eslint-disable-next-line
 function errorHandler(err, req, res, next) {
   console.error(err);
   const title = 'Villa kom upp';
@@ -30,6 +30,4 @@ app.use(errorHandler);
 
 const port = 3000;
 
-app.listen(port, () =>
-  console.log(`App listening at http://localhost:${port}`)
-);
+app.listen(port, () => console.log(`App listening at http://localhost:${port}`));

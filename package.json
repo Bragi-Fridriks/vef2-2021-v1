@@ -4,7 +4,9 @@
   "description": "[Kynning í fyrirlestri](https://youtu.be/pCEHnurbuCU).",
   "main": ".eslintrc.js",
   "scripts": {
-    "start": "nodemon -e js,ejs,html,json app.js"
+    "start": "nodemon -e js,ejs,html,json app.js",
+    "test": "stylelint \"**/*.css\" && eslint src/videos.js app.js",
+    "fix": "stylelint --fix \"**/*.css\" || eslint --fix src/videos.js app.js"    
   },
   "repository": {
     "type": "git",
@@ -20,5 +22,13 @@
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "nodemon": "^2.0.7"
+  },
+  "devDependencies": {
+    "eslint": "^7.19.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "stylelint": "^13.9.0",
+    "stylelint-config-sass-guidelines": "^7.1.0",
+    "stylelint-config-standard": "^20.0.0"
   }
 }

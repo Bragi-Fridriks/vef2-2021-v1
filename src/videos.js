@@ -7,42 +7,50 @@ const router = express.Router();
 const readFileAsync = util.promisify(fs.readFile);
 
 function catchErrors(fn) {
-    return (req, res, next) => fn(req, res, next).catch(next);
+  return (req, res, next) => fn(req, res, next).catch(next);
 }
 
 async function readList() {
-    const file = await readFileAsync('./videos.json');
+  const file = await readFileAsync('./videos.json');
 
-    const json = JSON.parse(file);
+  const json = JSON.parse(file);
 
-    return json;
+  return json;
 }
 
 async function list(req, res) {
-    const title = 'Myndbönd';
-    const json = await readList();
+  const title = 'Myndbönd';
+  const json = await readList();
 
-    const categories = json.categories.map(({ title, videos }) => ({ title, videos: videos.map(id => json.videos.find(v => v.id === id)) }))
+  const categories = json.categories.map(({ title, videos }) => ({
+    title,
+    videos: videos.map((id) => json.videos.find((v) => v.id === id)),
+  }));
 
-    res.render('videos', { title, categories });
+  res.render('videos', { title, categories });
 }
 
 async function video(req, res, next) {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    const json = await readList();
-    const { videos } = json;
+  const json = await readList();
+  const { videos } = json;
 
-    const foundVideo = videos.find(a => a.id === Number(id));
+  const foundVideo = videos.find((a) => a.id === Number(id));
 
+  if (!foundVideo) {
+    return next();
+  }
 
-    if (!foundVideo) {
-        return next();
-    }
+  const { title } = foundVideo;
 
-    const { title } = foundVideo;
-
-    return res.render('video', { title, video: { ...foundVideo, related: foundVideo.related.map(id => videos.find(v => v.id === id)) } });
+  return res.render('video', {
+    title,
+    video: {
+      ...foundVideo,
+      related: foundVideo.related.map((i) => videos.find((v) => v.id === i)),
+    },
+  });
 }
 
 router.get('/:id', catchErrors(video));
